@@ -4,7 +4,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 
-#include "plugin-settime.h"
+#include "plugin-base.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,7 +31,7 @@ void MainWindow::on_action_quit_triggered()
     close();
 }
 
-void MainWindow::add_constructor_tab(QWidget *plugin, const QString &tabName)
+void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
 {
     QWidget *tabWidget = new QWidget(constructorTabWidget);
     QVBoxLayout *vBoxLayout = new QVBoxLayout(tabWidget);
@@ -45,7 +45,7 @@ void MainWindow::add_constructor_tab(QWidget *plugin, const QString &tabName)
     QPushButton *sendButton = new QPushButton("Transmit");
     sendButton->setObjectName(buttonName);
     QObject::connect(sendButton, &QPushButton::clicked,
-                     dynamic_cast<PluginSetTime*>(plugin), &PluginSetTime::onRequestMessage);
+                     dynamic_cast<PluginBase*>(plugin), &PluginBase::onRequestMessage);
     vBoxLayout->addWidget(sendButton);
 
     constructorTabWidget->addTab(tabWidget, tabName);

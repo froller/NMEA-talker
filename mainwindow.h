@@ -2,9 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
 #include <QTabWidget>
 #include <QPlainTextEdit>
+
+#include "plugin-base.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,7 +21,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void add_constructor_tab(QWidget *widget, const QString &tabName);
+    void addPlugin(PluginBase *plugin, const QString &tabName);
 
 public:
     void on_log_item_push(const QString &s);

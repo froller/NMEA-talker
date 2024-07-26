@@ -20,13 +20,16 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
         ${TS_FILES}
+        plugin-base.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(NMEA-talker
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        plugin-settime.h plugin-settime.cpp plugin-settime.ui
+        plugin-nop.h        plugin-nop.cpp      plugin-nop.ui
+        plugin-settime.h    plugin-settime.cpp  plugin-settime.ui
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET NMEA-talker APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

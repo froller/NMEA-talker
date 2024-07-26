@@ -2,7 +2,7 @@
 #include "ui_plugin-settime.h"
 
 PluginSetTime::PluginSetTime(QWidget *parent)
-    : QWidget(parent)
+    : PluginBase(parent)
     , ui(new Ui::PluginSetTime)
 {
     ui->setupUi(this);
@@ -15,5 +15,6 @@ PluginSetTime::~PluginSetTime()
 
 void PluginSetTime::onRequestMessage()
 {
-    qDebug() << "Message requested";
+    PluginBase::onRequestMessage();
+    emit messageSent("+PIZMST");
 }

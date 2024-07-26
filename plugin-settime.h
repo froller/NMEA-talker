@@ -1,28 +1,25 @@
 #ifndef PLUGINSETTIME_H
 #define PLUGINSETTIME_H
 
-#include <QWidget>
+#include "plugin-base.h"
 
 namespace Ui {
 class PluginSetTime;
 }
 
-class PluginSetTime : public QWidget
+class PluginSetTime : public PluginBase
 {
     Q_OBJECT
 
 public:
     explicit PluginSetTime(QWidget *parent = nullptr);
-    ~PluginSetTime();
+    virtual ~PluginSetTime();
 
 private:
     Ui::PluginSetTime *ui;
 
 public slots:
-    void onRequestMessage();
-
-signals:
-    void messageSent(const QString &message);
+    virtual void onRequestMessage() override;
 
 };
 

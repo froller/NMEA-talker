@@ -4,6 +4,7 @@
 #include <QLocale>
 #include <QTranslator>
 
+#include "plugin-nop.h"
 #include "plugin-settime.h"
 
 int main(int argc, char *argv[])
@@ -23,8 +24,8 @@ int main(int argc, char *argv[])
 
     w.show();
 
-    QWidget *pluginSetTime = new PluginSetTime();
-    w.add_constructor_tab(pluginSetTime, "Set time");
+    w.addPlugin(new PluginNop(), "No operation");
+    w.addPlugin(new PluginSetTime(), "Set time");
 
     qDebug().setVerbosity(7);
     qDebug() << "***** Пыщь!!!!";
