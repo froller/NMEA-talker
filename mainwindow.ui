@@ -21,16 +21,6 @@
     </sizepolicy>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QTabWidget" name="constructorTabWidget">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>255</horstretch>
-        <verstretch>20</verstretch>
-       </sizepolicy>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="0">
      <widget class="QPlainTextEdit" name="logTextEdit">
       <property name="sizePolicy">
@@ -66,6 +56,16 @@ $GPGLL,,,,,,V,N*64</string>
       </property>
       <property name="placeholderText">
        <string>NMEA-0183 log</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="constructorTabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>255</horstretch>
+        <verstretch>20</verstretch>
+       </sizepolicy>
       </property>
      </widget>
     </item>

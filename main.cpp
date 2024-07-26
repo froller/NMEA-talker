@@ -26,5 +26,8 @@ int main(int argc, char *argv[])
     QWidget *pluginSetTime = new PluginSetTime();
     w.add_constructor_tab(pluginSetTime, "Set time");
 
+    qDebug().setVerbosity(7);
+    qDebug() << "***** Пыщь!!!!";
+
     return a.exec();
 }

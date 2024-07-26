@@ -17,6 +17,13 @@ public:
 
 private:
     Ui::PluginSetTime *ui;
+
+public slots:
+    void onRequestMessage();
+
+signals:
+    void messageSent(const QString &message);
+
 };
 
 #endif // PLUGINSETTIME_H

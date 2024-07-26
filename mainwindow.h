@@ -22,7 +22,7 @@ public:
 
     void add_constructor_tab(QWidget *widget, const QString &tabName);
 
-public slots:
+public:
     void on_log_item_push(const QString &s);
 
 private slots:

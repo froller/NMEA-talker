@@ -12,3 +12,8 @@ PluginSetTime::~PluginSetTime()
 {
     delete ui;
 }
+
+void PluginSetTime::onRequestMessage()
+{
+    qDebug() << "Message requested";
+}
