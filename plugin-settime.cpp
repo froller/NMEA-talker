@@ -13,6 +13,12 @@ PluginSetTime::~PluginSetTime()
     delete ui;
 }
 
+void PluginSetTime::onTabShow(const QString &tabName)
+{
+    if (tabName == this->objectName())
+        ui->dateTimeEdit->setDateTime(QDateTime());
+}
+
 void PluginSetTime::onRequestMessage()
 {
     PluginBase::onRequestMessage();

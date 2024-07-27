@@ -19,7 +19,7 @@ private:
     Ui::PluginNop *ui;
 
 public slots:
-    virtual void onRequestMessage();
+    virtual void onRequestMessage() override;
 
 };
 

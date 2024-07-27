@@ -29,9 +29,13 @@ public:
 private slots:
     void on_action_quit_triggered();
 
+    void on_constructorTabWidget_currentChanged(int index);
+
+signals:
+    void tabShow(const QString &tabName);
+
 private:
     Ui::MainWindow *ui;
-    QTabWidget *constructorTabWidget;
-    QPlainTextEdit *logTextEdit;
+
 };
 #endif // MAINWINDOW_H

@@ -15,6 +15,7 @@ public:
 
 public slots:
     virtual void onRequestMessage() { qDebug() << "Message requested"; };
+    virtual void onTabShow(const QString &tabName) { };
 
 signals:
     void messageSent(const QString &message);

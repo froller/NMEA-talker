@@ -11,9 +11,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    constructorTabWidget = findChild<QTabWidget *>("constructorTabWidget", Qt::FindChildrenRecursively);
-    logTextEdit = findChild<QPlainTextEdit *>("logTextEdit", Qt::FindChildrenRecursively);
 }
 
 MainWindow::~MainWindow()
@@ -23,7 +20,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_log_item_push(const QString &s)
 {
-    logTextEdit->appendPlainText(s);
+    ui->logTextEdit->appendPlainText(s);
 }
 
 void MainWindow::on_action_quit_triggered()
@@ -33,20 +30,34 @@ void MainWindow::on_action_quit_triggered()
 
 void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
 {
-    QWidget *tabWidget = new QWidget(constructorTabWidget);
+    QWidget *tabWidget = new QWidget(ui->constructorTabWidget);
     QVBoxLayout *vBoxLayout = new QVBoxLayout(tabWidget);
 
     plugin->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     vBoxLayout->addWidget(plugin);
 
     char buttonName[16];
-    snprintf(buttonName, 16, "sendButton%02u", constructorTabWidget->children().length());
+    snprintf(buttonName, 16, "sendButton%02u", ui->constructorTabWidget->children().length());
 
     QPushButton *sendButton = new QPushButton("Transmit");
     sendButton->setObjectName(buttonName);
     QObject::connect(sendButton, &QPushButton::clicked,
-                     dynamic_cast<PluginBase*>(plugin), &PluginBase::onRequestMessage);
+                     plugin, &PluginBase::onRequestMessage);
+    QObject::connect(this, &MainWindow::tabShow,
+                     plugin, &PluginBase::onTabShow);
     vBoxLayout->addWidget(sendButton);
 
-    constructorTabWidget->addTab(tabWidget, tabName);
+    ui->constructorTabWidget->addTab(tabWidget, tabName);
 }
+
+void MainWindow::on_constructorTabWidget_currentChanged(int index)
+{
+    for (auto i = ui->constructorTabWidget->children().begin(); i != ui->constructorTabWidget->children().end(); i++)
+    {
+        auto &o = *i;
+        QString name(o->objectName());
+    }
+
+    emit tabShow("");
+}
+

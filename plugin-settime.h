@@ -20,6 +20,7 @@ private:
 
 public slots:
     virtual void onRequestMessage() override;
+    virtual void onTabShow(const QString &tabName) override;
 
 };
 
