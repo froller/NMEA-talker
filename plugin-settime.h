@@ -20,8 +20,10 @@ private:
 
 public slots:
     virtual void onRequestMessage() override;
-    virtual void onTabShow(const QString &tabName) override;
+    virtual void onTick() override;
 
+private slots:
+    void on_checkBox_checkStateChanged(const Qt::CheckState &arg1);
 };
 
 #endif // PLUGINSETTIME_H

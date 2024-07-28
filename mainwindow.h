@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTabWidget>
 #include <QPlainTextEdit>
+#include <QTimer>
 
 #include "plugin-base.h"
 
@@ -26,16 +27,15 @@ public:
 public:
     void on_log_item_push(const QString &s);
 
+public slots:
+    void onMessage(const QString &s);
+
 private slots:
     void on_action_quit_triggered();
 
-    void on_constructorTabWidget_currentChanged(int index);
-
-signals:
-    void tabShow(const QString &tabName);
-
 private:
     Ui::MainWindow *ui;
+    QTimer timer;
 
 };
 #endif // MAINWINDOW_H

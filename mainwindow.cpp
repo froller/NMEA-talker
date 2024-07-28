@@ -11,6 +11,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    timer.setParent(this);
+    timer.setSingleShot(false);
+    timer.setInterval(1000);    // 1 sec
+    timer.start();
 }
 
 MainWindow::~MainWindow()
@@ -41,23 +45,17 @@ void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
 
     QPushButton *sendButton = new QPushButton("Transmit");
     sendButton->setObjectName(buttonName);
-    QObject::connect(sendButton, &QPushButton::clicked,
-                     plugin, &PluginBase::onRequestMessage);
-    QObject::connect(this, &MainWindow::tabShow,
-                     plugin, &PluginBase::onTabShow);
+    QObject::connect(sendButton, &QPushButton::clicked, plugin, &PluginBase::onRequestMessage);
+    QObject::connect(&timer, &QTimer::timeout,          plugin, &PluginBase::onTick);
+    QObject::connect(plugin, &PluginBase::message,      this, &MainWindow::onMessage);
+    QObject::connect(plugin, &PluginBase::message,      this->ui->logTextEdit, &QPlainTextEdit::appendPlainText);
+
     vBoxLayout->addWidget(sendButton);
 
     ui->constructorTabWidget->addTab(tabWidget, tabName);
 }
 
-void MainWindow::on_constructorTabWidget_currentChanged(int index)
+void MainWindow::onMessage(const QString &s)
 {
-    for (auto i = ui->constructorTabWidget->children().begin(); i != ui->constructorTabWidget->children().end(); i++)
-    {
-        auto &o = *i;
-        QString name(o->objectName());
-    }
-
-    emit tabShow("");
+    qDebug() << s;
 }
-
