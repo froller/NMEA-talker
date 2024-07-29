@@ -13,9 +13,6 @@
   <property name="windowTitle">
    <string>NMEA talker</string>
   </property>
-  <property name="toolTip">
-   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -95,16 +92,17 @@ $GPGLL,,,,,,V,N*64</string>
     <property name="title">
      <string>Edi&amp;t</string>
     </property>
-    <addaction name="action_4"/>
+    <addaction name="action_copy"/>
     <addaction name="separator"/>
-    <addaction name="action_8"/>
+    <addaction name="action_select_all"/>
     <addaction name="separator"/>
-    <addaction name="action_10"/>
+    <addaction name="action_find"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
-     <string>&amp;View</string>
+     <string>&amp;Options</string>
     </property>
+    <addaction name="action_preferences"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -122,7 +120,7 @@ $GPGLL,,,,,,V,N*64</string>
     <iconset theme="document-save-as"/>
    </property>
    <property name="text">
-    <string>Save log as...</string>
+    <string>&amp;Save log as...</string>
    </property>
   </action>
   <action name="action_quit">
@@ -142,31 +140,81 @@ $GPGLL,,,,,,V,N*64</string>
     <enum>QAction::MenuRole::QuitRole</enum>
    </property>
   </action>
-  <action name="action_4">
+  <action name="action_copy">
    <property name="icon">
     <iconset theme="edit-copy"/>
    </property>
    <property name="text">
     <string>&amp;Copy</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
   </action>
-  <action name="action_8">
+  <action name="action_select_all">
    <property name="icon">
     <iconset theme="edit-select-all"/>
    </property>
    <property name="text">
     <string>Select &amp;all</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
   </action>
-  <action name="action_10">
+  <action name="action_find">
    <property name="icon">
     <iconset theme="edit-find"/>
    </property>
    <property name="text">
     <string>&amp;Find...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="action_preferences">
+   <property name="text">
+    <string>&amp;Preferences...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::PreferencesRole</enum>
+   </property>
   </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>action_select_all</sender>
+   <signal>triggered()</signal>
+   <receiver>logTextEdit</receiver>
+   <slot>selectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>349</x>
+     <y>295</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_copy</sender>
+   <signal>triggered()</signal>
+   <receiver>logTextEdit</receiver>
+   <slot>copy()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>349</x>
+     <y>295</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

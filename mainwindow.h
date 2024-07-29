@@ -8,6 +8,7 @@
 #include <QFileDialog>
 
 #include "plugin-base.h"
+#include "preferencesdialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -32,12 +33,14 @@ public slots:
     void onMessage(const QString &s);
 
 private slots:
+    void on_action_save_as_triggered();
     void on_action_quit_triggered();
 
-    void on_action_save_as_triggered();
+    void on_action_preferences_triggered();
 
 private:
     Ui::MainWindow *ui;
     QTimer timer;
+    PreferencesDialog preferencesDialog;
 };
 #endif // MAINWINDOW_H

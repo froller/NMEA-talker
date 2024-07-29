@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     timer.setInterval(1000);    // 1 sec
     timer.start();
 
+//    preferences.setParent(this);
+
 }
 
 MainWindow::~MainWindow()
@@ -29,11 +31,6 @@ MainWindow::~MainWindow()
 void MainWindow::on_log_item_push(const QString &s)
 {
     ui->logTextEdit->appendPlainText(s);
-}
-
-void MainWindow::on_action_quit_triggered()
-{
-    close();
 }
 
 void MainWindow::on_action_save_as_triggered()
@@ -54,6 +51,10 @@ void MainWindow::on_action_save_as_triggered()
     }
 }
 
+void MainWindow::on_action_quit_triggered()
+{
+    close();
+}
 
 void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
 {
@@ -83,4 +84,15 @@ void MainWindow::onMessage(const QString &s)
     qDebug() << s;
 }
 
+void MainWindow::on_action_preferences_triggered()
+{
+    if (preferencesDialog.exec())
+    {
+        qDebug() << "Prefrences changed";
+    }
+    else
+    {
+        qDebug() << "Prefrences rolled back";
+    }
+}
 

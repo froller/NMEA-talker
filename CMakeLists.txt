@@ -29,6 +29,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         plugin-nop.h        plugin-nop.cpp      plugin-nop.ui
         plugin-settime.h    plugin-settime.cpp  plugin-settime.ui
+        preferencesdialog.h preferencesdialog.cpp preferencesdialog.ui
 
     )
 # Define target properties for Android with Qt 6 as:
