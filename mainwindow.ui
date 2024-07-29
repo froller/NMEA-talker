@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>NMEA talker</string>
   </property>
+  <property name="toolTip">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -119,7 +122,7 @@ $GPGLL,,,,,,V,N*64</string>
     <iconset theme="document-save-as"/>
    </property>
    <property name="text">
-    <string>&amp;Save log as...</string>
+    <string>Save log as...</string>
    </property>
   </action>
   <action name="action_quit">

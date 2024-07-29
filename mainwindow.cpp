@@ -3,6 +3,8 @@
 
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QFileDialog>
+#include <QSaveFile>
 
 #include "plugin-base.h"
 
@@ -11,10 +13,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     timer.setParent(this);
     timer.setSingleShot(false);
     timer.setInterval(1000);    // 1 sec
     timer.start();
+
 }
 
 MainWindow::~MainWindow()
@@ -31,6 +35,25 @@ void MainWindow::on_action_quit_triggered()
 {
     close();
 }
+
+void MainWindow::on_action_save_as_triggered()
+{
+    QFileDialog saveLogAsDialog(this, "Save log as...");
+    saveLogAsDialog.setAcceptMode(QFileDialog::AcceptSave);
+    saveLogAsDialog.setNameFilters(QStringList() << "Log files (*.log)" << "Text files (*.txt)" << "All files (*.*)");
+    if (saveLogAsDialog.exec())
+    {
+        QSaveFile logFile(saveLogAsDialog.selectedFiles().at(0));
+        if (logFile.open(QSaveFile::WriteOnly | QSaveFile::Truncate | QSaveFile::Text))
+        {
+            logFile.write(ui->logTextEdit->toPlainText().toLatin1());
+            logFile.commit();
+        }
+        else
+            qErrnoWarning("Failed to open log file");
+    }
+}
+
 
 void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
 {
@@ -59,3 +82,5 @@ void MainWindow::onMessage(const QString &s)
 {
     qDebug() << s;
 }
+
+
