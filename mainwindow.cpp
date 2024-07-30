@@ -11,6 +11,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , settings()
+    , preferencesDialog(settings)
 {
     ui->setupUi(this);
 
@@ -18,9 +20,6 @@ MainWindow::MainWindow(QWidget *parent)
     timer.setSingleShot(false);
     timer.setInterval(1000);    // 1 sec
     timer.start();
-
-//    preferences.setParent(this);
-
 }
 
 MainWindow::~MainWindow()
@@ -88,7 +87,7 @@ void MainWindow::on_action_preferences_triggered()
 {
     if (preferencesDialog.exec())
     {
-        qDebug() << "Prefrences changed";
+        qDebug() << settings.value("baudrate") << settings.value("databits") << settings.value("parity") << settings.value("stopbits");
     }
     else
     {

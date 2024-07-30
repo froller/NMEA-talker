@@ -5,7 +5,7 @@
 #include <QTabWidget>
 #include <QPlainTextEdit>
 #include <QTimer>
-#include <QFileDialog>
+#include <QSettings>
 
 #include "plugin-base.h"
 #include "preferencesdialog.h"
@@ -40,6 +40,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QSettings settings;
     QTimer timer;
     PreferencesDialog preferencesDialog;
 };
