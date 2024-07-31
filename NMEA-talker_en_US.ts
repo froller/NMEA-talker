@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.1" language="en_US">
 <context>
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="55"/>
         <source>NMEA-0183 log</source>
-        <translation>NMEA-0183 протокол</translation>
+        <translation>NMEA-0183 log</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="82"/>
         <source>&amp;File</source>
-        <translatorcomment>Файл</translatorcomment>
-        <translation>&amp;Файл</translation>
+        <translation>&amp;File</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="90"/>
         <source>Edi&amp;t</source>
-        <translation>&amp;Правка</translation>
+        <translation>Edi&amp;t</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="100"/>
@@ -27,7 +26,7 @@
     <message>
         <location filename="mainwindow.ui" line="106"/>
         <source>&amp;Help</source>
-        <translation>&amp;Справка</translation>
+        <translation>&amp;Help</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="122"/>
@@ -92,7 +91,6 @@
     <message>
         <location filename="mainwindow.cpp" line="56"/>
         <source>Error saving log file</source>
-        <translatorcomment>Ошибка сохранения файла протокола</translatorcomment>
         <translation></translation>
     </message>
 </context>
@@ -101,7 +99,7 @@
     <message>
         <location filename="plugin-nop.ui" line="9"/>
         <source>No operation</source>
-        <translation>Ничего не делать</translation>
+        <translation>No operation</translation>
     </message>
 </context>
 <context>
@@ -109,17 +107,17 @@
     <message>
         <location filename="plugin-settime.ui" line="12"/>
         <source>Time</source>
-        <translation>Время</translation>
+        <translation>Time</translation>
     </message>
     <message>
         <location filename="plugin-settime.ui" line="22"/>
         <source>dd.MM.yyyy HH:mm:ss</source>
-        <translation>дд.ММ.гггг ЧЧ:мм:сс</translation>
+        <translation>dd.MM.yyyy HH:mm:ss</translation>
     </message>
     <message>
         <location filename="plugin-settime.ui" line="35"/>
         <source>Use current</source>
-        <translation>Использовать текущее</translation>
+        <translation>Use current</translation>
     </message>
 </context>
 <context>
@@ -127,17 +125,17 @@
     <message>
         <location filename="preferencesdialog.ui" line="6"/>
         <source>Preferences</source>
-        <translation>Настройки</translation>
+        <translation>Preferences</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="17"/>
         <source>Device</source>
-        <translation>Устройство</translation>
+        <translation>Device</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="27"/>
         <source>Baudrate</source>
-        <translation>Скорость</translation>
+        <translation>Baudrate</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="34"/>
@@ -183,68 +181,68 @@
     <message>
         <location filename="preferencesdialog.ui" line="84"/>
         <source>Databits</source>
-        <translation>Биты данных</translation>
+        <translation>Databits</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="91"/>
         <source>Parity</source>
-        <translation>Чётность</translation>
+        <translation>Parity</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="98"/>
         <source>Stopbits</source>
-        <translation>Стоповые биты</translation>
+        <translation>Stopbits</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="109"/>
         <source>8-bit</source>
-        <translation>8 бит</translation>
+        <translation>8-bit</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="114"/>
         <source>7-bit</source>
-        <translation>7 бит</translation>
+        <translation>7-bit</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="123"/>
         <location filename="preferencesdialog.ui" line="163"/>
         <source>None</source>
-        <translation>Нет</translation>
+        <translation>None</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="128"/>
         <source>Odd</source>
-        <translation>Нечёт</translation>
+        <translation>Odd</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="133"/>
         <source>Even</source>
-        <translation>Чёт</translation>
+        <translation>Even</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="142"/>
         <source>1 bit</source>
-        <translation>1 бит</translation>
+        <translation>1 bit</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="147"/>
         <source>2 bits</source>
-        <translation>2 бита</translation>
+        <translation>2 bits</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="155"/>
         <source>Flow control</source>
-        <translation>Контроль передачи</translation>
+        <translation>Flow control</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="168"/>
         <source>Hardware (RTS/CTS)</source>
-        <translation>Аппаратный (RTS/CTS)</translation>
+        <translation>Hardware (RTS/CTS)</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="173"/>
         <source>Software (XON/XOFF)</source>
-        <translation>Программный (XON/XOFF)</translation>
+        <translation>Software (XON/XOFF)</translation>
     </message>
 </context>
 </TS>

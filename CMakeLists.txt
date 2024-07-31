@@ -12,7 +12,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
-set(TS_FILES NMEA-talker_ru_RU.ts)
+set(TS_FILES
+    NMEA-talker_en_US.ts
+    NMEA-talker_ru_RU.ts
+)
+
+set(PLUGIN_SOURCES
+    plugin-nop.h        plugin-nop.cpp      plugin-nop.ui
+    plugin-settime.h    plugin-settime.cpp  plugin-settime.ui
+)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -21,16 +29,14 @@ set(PROJECT_SOURCES
         mainwindow.ui
         ${TS_FILES}
         plugin-base.h
+        preferencesdialog.h preferencesdialog.cpp preferencesdialog.ui
+        ${PLUGIN_SOURCES}
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(NMEA-talker
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        plugin-nop.h        plugin-nop.cpp      plugin-nop.ui
-        plugin-settime.h    plugin-settime.cpp  plugin-settime.ui
-        preferencesdialog.h preferencesdialog.cpp preferencesdialog.ui
-
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET NMEA-talker APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -60,7 +66,7 @@ target_link_libraries(NMEA-talker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
 if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.NMEA-talker)
+  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER net.froller.NMEA-talker)
 endif()
 set_target_properties(NMEA-talker PROPERTIES
     ${BUNDLE_ID_OPTION}
@@ -69,6 +75,8 @@ set_target_properties(NMEA-talker PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
+
+qt_add_lupdate(TS_FILES ${TS_FILES} SOURCE_TARGETS NMEA-talker)
 
 include(GNUInstallDirs)
 install(TARGETS NMEA-talker
