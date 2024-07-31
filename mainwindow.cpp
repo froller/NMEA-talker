@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QSaveFile>
+#include <QMessageBox>
 
 #include "plugin-base.h"
 
@@ -44,9 +45,18 @@ void MainWindow::on_action_save_as_triggered()
         {
             logFile.write(ui->logTextEdit->toPlainText().toLatin1());
             logFile.commit();
+            qInfo() << "Log saved as" << logFile.fileName();
         }
         else
-            qErrnoWarning("Failed to open log file");
+        {
+            int e = errno;
+            qErrnoWarning(e, "Failed to save log file");
+            QMessageBox errorMessage;
+            errorMessage.setIcon(QMessageBox::Critical);
+            errorMessage.setText(tr("Error saving log file"));
+            errorMessage.setInformativeText(strerror(e));
+            errorMessage.exec();
+        }
     }
 }
 
