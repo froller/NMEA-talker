@@ -5,7 +5,6 @@
 #include <QTabWidget>
 #include <QPlainTextEdit>
 #include <QTimer>
-#include <QSettings>
 
 #include "plugin-base.h"
 #include "preferencesdialog.h"
@@ -13,6 +12,7 @@
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
+class PreferencesDialog;
 }
 QT_END_NAMESPACE
 
@@ -40,8 +40,12 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QSettings settings;
     QTimer timer;
     PreferencesDialog preferencesDialog;
+    QString settingsFileName;
+
+private:
+    void setPreferencesDialogValues(const QSettings &settings);
+
 };
 #endif // MAINWINDOW_H

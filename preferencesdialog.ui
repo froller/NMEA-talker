@@ -165,7 +165,7 @@
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="flowControlComboBox">
        <item>
         <property name="text">
          <string>None</string>

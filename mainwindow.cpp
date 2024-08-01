@@ -5,14 +5,16 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QSaveFile>
+#include <QSettings>
 
 #include "plugin-base.h"
+#include "ui_preferencesdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , settings()
-    , preferencesDialog(settings)
+    , preferencesDialog()
+    , settingsFileName(QApplication::applicationDirPath() + "/NMEA-talker.ini")
 {
     ui->setupUi(this);
 
@@ -20,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent)
     timer.setSingleShot(false);
     timer.setInterval(1000);    // 1 sec
     timer.start();
+
+    QSettings settings(settingsFileName, QSettings::IniFormat);
+    setPreferencesDialogValues(settings);
 }
 
 MainWindow::~MainWindow()
@@ -85,13 +90,33 @@ void MainWindow::onMessage(const QString &s)
 
 void MainWindow::on_action_preferences_triggered()
 {
+    QSettings settings(settingsFileName, QSettings::IniFormat);
+
     if (preferencesDialog.exec())
     {
-        qDebug() << settings.value("baudrate") << settings.value("databits") << settings.value("parity") << settings.value("stopbits");
+        Ui::PreferencesDialog *dialogUi = preferencesDialog.getUi();
+        settings.beginGroup("connectivity");
+        settings.setValue("device", dialogUi->deviceComboBox->currentText());
+        settings.setValue("baudrate", dialogUi->baudrateComboBox->currentText().toUInt());
+        settings.setValue("databits", 8 - dialogUi->databitsComboBox->currentIndex());
+        settings.setValue("parity", dialogUi->parityComboBox->currentIndex());
+        settings.setValue("stopbits", 1 + dialogUi->stopbitsComboBox->currentIndex());
+        settings.setValue("flowcontrol", dialogUi->flowControlComboBox->currentIndex());
+        settings.endGroup();
     }
     else
     {
-        qDebug() << "Prefrences rolled back";
+        setPreferencesDialogValues(settings);
     }
 }
 
+void MainWindow::setPreferencesDialogValues(const QSettings &s)
+{
+    Ui::PreferencesDialog *dialogUi = preferencesDialog.getUi();
+    dialogUi->deviceComboBox->setCurrentText(s.value("connectivity/device").toString());
+    dialogUi->baudrateComboBox->setCurrentText(s.value("connectivity/baudrate").toString());
+    dialogUi->databitsComboBox->setCurrentIndex(8 - s.value("connectivity/databits").toUInt());
+    dialogUi->parityComboBox->setCurrentIndex(s.value("connectivity/parity").toUInt());
+    dialogUi->stopbitsComboBox->setCurrentIndex(s.value("connectivity/stopbits").toUInt() - 1);
+    dialogUi->flowControlComboBox->setCurrentIndex(s.value("connectivity/flowcontrol").toUInt());
+}
