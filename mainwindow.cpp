@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QSaveFile>
 #include <QSettings>
+#include <QMessageBox>
 
 #include "plugin-base.h"
 #include "ui_preferencesdialog.h"
@@ -52,6 +53,15 @@ void MainWindow::on_action_save_as_triggered()
         }
         else
             qErrnoWarning("Failed to open log file");
+        {
+            int e = errno;
+            qErrnoWarning(e, "Failed to save log file");
+            QMessageBox errorMessage;
+            errorMessage.setIcon(QMessageBox::Critical);
+            errorMessage.setText(tr("Error saving log file"));
+            errorMessage.setInformativeText(strerror(e));
+            errorMessage.exec();
+        }
     }
 }
 
