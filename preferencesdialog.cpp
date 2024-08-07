@@ -1,6 +1,8 @@
 #include "preferencesdialog.h"
 #include "ui_preferencesdialog.h"
 
+#include <QtSerialPort/QSerialPort>
+
 PreferencesDialog::PreferencesDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::PreferencesDialog)
