@@ -7,6 +7,7 @@
 #include <QSaveFile>
 #include <QSettings>
 #include <QMessageBox>
+#include <QSerialPortInfo>
 
 #include "plugin-base.h"
 #include "ui_preferencesdialog.h"
@@ -122,7 +123,14 @@ void MainWindow::on_action_preferences_triggered()
 
 void MainWindow::setPreferencesDialogValues(const QSettings &s)
 {
+    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+
     Ui::PreferencesDialog *dialogUi = preferencesDialog.getUi();
+    dialogUi->deviceComboBox->clear();
+    for (auto p : ports)
+    {
+        dialogUi->deviceComboBox->addItem(p.portName(), p.portName());
+    }
     dialogUi->deviceComboBox->setCurrentText(s.value("connectivity/device").toString());
     dialogUi->baudrateComboBox->setCurrentText(s.value("connectivity/baudrate").toString());
     dialogUi->databitsComboBox->setCurrentIndex(8 - s.value("connectivity/databits").toUInt());
