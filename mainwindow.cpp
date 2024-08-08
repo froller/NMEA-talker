@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QPushButton>
 #include <QFileDialog>
 #include <QSaveFile>
@@ -17,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , preferencesDialog()
     , settingsFileName(QApplication::applicationDirPath() + "/NMEA-talker.ini")
+    , tty(nullptr)
 {
     ui->setupUi(this);
 
@@ -31,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    if (tty)
+        disconnectDevice();
     delete ui;
 }
 
@@ -127,10 +131,9 @@ void MainWindow::setPreferencesDialogValues(const QSettings &s)
 
     Ui::PreferencesDialog *dialogUi = preferencesDialog.getUi();
     dialogUi->deviceComboBox->clear();
-    for (auto p : ports)
-    {
+    for (const QSerialPortInfo &p : ports)
         dialogUi->deviceComboBox->addItem(p.portName(), p.portName());
-    }
+
     dialogUi->deviceComboBox->setCurrentText(s.value("connectivity/device").toString());
     dialogUi->baudrateComboBox->setCurrentText(s.value("connectivity/baudrate").toString());
     dialogUi->databitsComboBox->setCurrentIndex(8 - s.value("connectivity/databits").toUInt());
@@ -138,3 +141,69 @@ void MainWindow::setPreferencesDialogValues(const QSettings &s)
     dialogUi->stopbitsComboBox->setCurrentIndex(s.value("connectivity/stopbits").toUInt() - 1);
     dialogUi->flowControlComboBox->setCurrentIndex(s.value("connectivity/flowcontrol").toUInt());
 }
+
+void MainWindow::on_connectButton_clicked()
+{
+    if (tty)
+    {
+        ui->statusbar->showMessage(QString("Disconnected from ") + tty->portName(), 5000);
+        disconnectDevice();
+        ui->connectButton->setText("Connect");
+    }
+    else if (connectDevice())
+    {
+        ui->connectButton->setText("Disconnect");
+        ui->statusbar->showMessage(QString("Connected to ") + tty->portName(), 0);
+    }
+    else
+    {
+        ui->connectButton->setText("Connect");
+        ui->statusbar->showMessage("Connection failed", 5000);
+    }
+}
+
+bool MainWindow::connectDevice()
+{
+    QSettings settings(settingsFileName, QSettings::IniFormat);
+
+    tty = new QSerialPort(settings.value("connectivity/device").toString());
+    if (!tty)
+    {
+        qCritical() << "Failed to open" << settings.value("connectivity/device").toString().toUtf8();
+        return false;
+    }
+
+    tty->setBaudRate(settings.value("connectivity/baudrate").toUInt(), QSerialPort::AllDirections);
+    tty->setDataBits(QSerialPort::DataBits(settings.value("connectivity/databits").toUInt()));
+    switch (settings.value("connectivity/parity").toUInt())
+    {
+    case 1:
+        tty->setParity(QSerialPort::Parity::OddParity);
+        break;
+    case 2:
+        tty->setParity(QSerialPort::Parity::EvenParity);
+        break;
+    case 0:
+    default:
+        tty->setParity(QSerialPort::Parity::NoParity);
+    }
+    tty->setStopBits(QSerialPort::StopBits(settings.value("connectivity/stopbits").toUInt()));
+    tty->setFlowControl(QSerialPort::FlowControl(settings.value("connectivity/flowcontrol").toUInt()));
+    if (!tty->open(QSerialPort::ReadWrite))
+    {
+        qCritical() << "Failed to open" << settings.value("connectivity/device").toString().toUtf8() << ":" << tty->error();
+        return false;
+    }
+
+    qInfo() << "Connected to" << tty->portName();
+    return true;
+}
+
+void MainWindow::disconnectDevice()
+{
+    qInfo() << "Disconnected from" << tty->portName();
+    tty->close();
+    delete tty;
+    tty = nullptr;
+}
+
