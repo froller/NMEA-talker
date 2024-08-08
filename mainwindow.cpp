@@ -88,10 +88,9 @@ void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
 
     QPushButton *sendButton = new QPushButton("Transmit");
     sendButton->setObjectName(buttonName);
-    QObject::connect(sendButton, &QPushButton::clicked, plugin, &PluginBase::onRequestMessage);
-    QObject::connect(&timer, &QTimer::timeout,          plugin, &PluginBase::onTick);
-    QObject::connect(plugin, &PluginBase::message,      this, &MainWindow::onMessage);
-    QObject::connect(plugin, &PluginBase::message,      this->ui->logTextEdit, &QPlainTextEdit::appendPlainText);
+    QObject::connect(sendButton, SIGNAL(clicked()), plugin, SLOT(onRequestMessage()));
+    QObject::connect(&timer, SIGNAL(timeout()), plugin, SLOT(onTick()));
+    QObject::connect(plugin, SIGNAL(message(QString)), this, SLOT(onMessage(QString)));
 
     vBoxLayout->addWidget(sendButton);
 
@@ -100,7 +99,18 @@ void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
 
 void MainWindow::onMessage(const QString &s)
 {
-    qDebug() << s;
+    tty->write(s.toStdString().c_str());
+    ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor);
+    ui->logTextEdit->insertPlainText(s + "\n");
+    ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+}
+
+void MainWindow::onReadyRead()
+{
+    const QByteArray &data = tty->readAll();
+    ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor);
+    ui->logTextEdit->insertPlainText(data.constData());
+    ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
 }
 
 void MainWindow::on_action_preferences_triggered()
@@ -149,16 +159,19 @@ void MainWindow::on_connectButton_clicked()
         ui->statusbar->showMessage(QString("Disconnected from ") + tty->portName(), 5000);
         disconnectDevice();
         ui->connectButton->setText("Connect");
+        ui->logTextEdit->setEnabled(false);
     }
     else if (connectDevice())
     {
         ui->connectButton->setText("Disconnect");
         ui->statusbar->showMessage(QString("Connected to ") + tty->portName(), 0);
+        ui->logTextEdit->setEnabled(true);
     }
     else
     {
         ui->connectButton->setText("Connect");
         ui->statusbar->showMessage("Connection failed", 5000);
+        ui->logTextEdit->setEnabled(false);
     }
 }
 
@@ -192,9 +205,12 @@ bool MainWindow::connectDevice()
     if (!tty->open(QSerialPort::ReadWrite))
     {
         qCritical() << "Failed to open" << settings.value("connectivity/device").toString().toUtf8() << ":" << tty->error();
+        delete tty;
+        tty = nullptr;
         return false;
     }
 
+    QObject::connect(tty, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     qInfo() << "Connected to" << tty->portName();
     return true;
 }
@@ -202,7 +218,9 @@ bool MainWindow::connectDevice()
 void MainWindow::disconnectDevice()
 {
     qInfo() << "Disconnected from" << tty->portName();
-    tty->close();
+    if (tty->isOpen())
+        tty->close();
+    QObject::disconnect(tty, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     delete tty;
     tty = nullptr;
 }

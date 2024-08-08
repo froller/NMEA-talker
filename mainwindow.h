@@ -32,6 +32,7 @@ public:
 
 public slots:
     void onMessage(const QString &s);
+    void onReadyRead();
 
 private slots:
     void on_action_save_as_triggered();

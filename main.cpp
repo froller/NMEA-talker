@@ -27,7 +27,5 @@ int main(int argc, char *argv[])
     w.addPlugin(new PluginNop(), "No operation");
     w.addPlugin(new PluginSetTime(), "Set time");
 
-    qDebug() << "***** Пыщь!!!!";
-
     return a.exec();
 }
