@@ -17,20 +17,24 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
-    <item row="1" column="0">
-     <widget class="QPlainTextEdit" name="logTextEdit">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,255,0">
+    <item>
+     <widget class="QTabWidget" name="constructorTabWidget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>255</horstretch>
-        <verstretch>80</verstretch>
+        <verstretch>20</verstretch>
        </sizepolicy>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="logTextEdit">
+      <property name="contextMenuPolicy">
+       <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="undoRedoEnabled">
        <bool>false</bool>
@@ -41,25 +45,13 @@
       <property name="readOnly">
        <bool>true</bool>
       </property>
-      <property name="plainText">
-       <string notr="true"/>
-      </property>
       <property name="textInteractionFlags">
        <set>Qt::TextInteractionFlag::TextSelectableByKeyboard|Qt::TextInteractionFlag::TextSelectableByMouse</set>
       </property>
-      <property name="backgroundVisible">
-       <bool>false</bool>
-      </property>
-      <property name="centerOnScroll">
-       <bool>false</bool>
-      </property>
-      <property name="placeholderText">
-       <string>NMEA-0183 log</string>
-      </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -82,16 +74,6 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="0">
-     <widget class="QTabWidget" name="constructorTabWidget">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>255</horstretch>
-        <verstretch>20</verstretch>
-       </sizepolicy>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -100,7 +82,7 @@
      <x>0</x>
      <y>0</y>
      <width>700</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -116,6 +98,7 @@
      <string>Edi&amp;t</string>
     </property>
     <addaction name="action_copy"/>
+    <addaction name="action_clear"/>
     <addaction name="separator"/>
     <addaction name="action_select_all"/>
     <addaction name="separator"/>
@@ -199,6 +182,9 @@
    </property>
   </action>
   <action name="action_preferences">
+   <property name="icon">
+    <iconset theme="preferences-system"/>
+   </property>
    <property name="text">
     <string>&amp;Preferences...</string>
    </property>
@@ -226,6 +212,14 @@
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::AboutQtRole</enum>
+   </property>
+  </action>
+  <action name="action_clear">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditDelete"/>
+   </property>
+   <property name="text">
+    <string>Cl&amp;ear</string>
    </property>
   </action>
  </widget>
@@ -260,6 +254,22 @@
     <hint type="destinationlabel">
      <x>349</x>
      <y>295</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_clear</sender>
+   <signal>triggered()</signal>
+   <receiver>logTextEdit</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>349</x>
+     <y>250</y>
     </hint>
    </hints>
   </connection>

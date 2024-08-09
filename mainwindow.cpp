@@ -9,6 +9,7 @@
 #include <QSettings>
 #include <QMessageBox>
 #include <QSerialPortInfo>
+#include <QTextDocumentFragment>
 
 #include "plugin-base.h"
 #include "ui_preferencesdialog.h"
@@ -29,6 +30,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     QSettings settings(settingsFileName, QSettings::IniFormat);
     setPreferencesDialogValues(settings);
+
+    ui->logTextEdit->addAction(ui->action_copy);
+    ui->logTextEdit->addAction(ui->action_select_all);
+    ui->logTextEdit->addAction(ui->action_clear);
 }
 
 MainWindow::~MainWindow()
@@ -99,18 +104,29 @@ void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
 
 void MainWindow::onMessage(const QString &s)
 {
-    tty->write(s.toStdString().c_str());
-    ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor);
-    ui->logTextEdit->insertPlainText(s + "\n");
+    if (tty)
+        tty->write(s.toStdString().c_str());
+    const QTextCursor &c = ui->logTextEdit->textCursor();
     ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+    ui->logTextEdit->insertPlainText(s + "\n");
+    if (c.selection().isEmpty())
+        ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+    else
+        ui->logTextEdit->setTextCursor(c);
+    //ui->logTextEdit->ensureCursorVisible();
 }
 
 void MainWindow::onReadyRead()
 {
     const QByteArray &data = tty->readAll();
-    ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor);
-    ui->logTextEdit->insertPlainText(data.constData());
+    const QTextCursor &c = ui->logTextEdit->textCursor();
     ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+    ui->logTextEdit->insertPlainText(data.constData());
+    if (c.selection().isEmpty())
+        ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+    else
+        ui->logTextEdit->setTextCursor(c);
+    //ui->logTextEdit->ensureCursorVisible();
 }
 
 void MainWindow::on_action_preferences_triggered()
@@ -159,19 +175,16 @@ void MainWindow::on_connectButton_clicked()
         ui->statusbar->showMessage(QString("Disconnected from ") + tty->portName(), 5000);
         disconnectDevice();
         ui->connectButton->setText("Connect");
-        ui->logTextEdit->setEnabled(false);
     }
     else if (connectDevice())
     {
         ui->connectButton->setText("Disconnect");
         ui->statusbar->showMessage(QString("Connected to ") + tty->portName(), 0);
-        ui->logTextEdit->setEnabled(true);
     }
     else
     {
         ui->connectButton->setText("Connect");
         ui->statusbar->showMessage("Connection failed", 5000);
-        ui->logTextEdit->setEnabled(false);
     }
 }
 

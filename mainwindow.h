@@ -37,9 +37,7 @@ public slots:
 private slots:
     void on_action_save_as_triggered();
     void on_action_quit_triggered();
-
     void on_action_preferences_triggered();
-
     void on_connectButton_clicked();
 
 private:
