@@ -23,17 +23,24 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // Log context menu
+    ui->logTextEdit->addAction(ui->action_copy);
+    ui->logTextEdit->addAction(ui->action_select_all);
+    ui->logTextEdit->addAction(ui->action_clear);
+
+    // Connecting switching of constructor widgets to MainWindow
+    QObject::connect(ui->constructorTabWidget, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
+
+    // Starting timer for constructor widgets
     timer.setParent(this);
     timer.setSingleShot(false);
     timer.setInterval(1000);    // 1 sec
     timer.start();
 
+    // Reading settings
     QSettings settings(settingsFileName, QSettings::IniFormat);
     setPreferencesDialogValues(settings);
 
-    ui->logTextEdit->addAction(ui->action_copy);
-    ui->logTextEdit->addAction(ui->action_select_all);
-    ui->logTextEdit->addAction(ui->action_clear);
 }
 
 MainWindow::~MainWindow()
@@ -88,16 +95,17 @@ void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
     plugin->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     vBoxLayout->addWidget(plugin);
 
-    char buttonName[16];
-    snprintf(buttonName, 16, "sendButton%02u", ui->constructorTabWidget->children().length());
+    //char buttonName[16];
+    //snprintf(buttonName, 16, "sendButton%02u", ui->constructorTabWidget->children().length());
 
     QPushButton *sendButton = new QPushButton("Transmit");
-    sendButton->setObjectName(buttonName);
-    QObject::connect(sendButton, SIGNAL(clicked()), plugin, SLOT(onRequestMessage()));
+    //sendButton->setObjectName(buttonName);
+    sendButton->setObjectName("transmitButton");
+    //QObject::connect(sendButton, SIGNAL(clicked()), plugin, SLOT(onRequestMessage()));
     QObject::connect(&timer, SIGNAL(timeout()), plugin, SLOT(onTick()));
     QObject::connect(plugin, SIGNAL(message(QString)), this, SLOT(onMessage(QString)));
 
-    vBoxLayout->addWidget(sendButton);
+    //vBoxLayout->addWidget(sendButton);
 
     ui->constructorTabWidget->addTab(tabWidget, tabName);
 }
@@ -127,6 +135,11 @@ void MainWindow::onReadyRead()
     else
         ui->logTextEdit->setTextCursor(c);
     //ui->logTextEdit->ensureCursorVisible();
+}
+
+void MainWindow::onTabChanged(int index)
+{
+    qDebug() << "Tab" << index << "selected";
 }
 
 void MainWindow::on_action_preferences_triggered()

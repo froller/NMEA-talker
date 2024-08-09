@@ -33,6 +33,7 @@ public:
 public slots:
     void onMessage(const QString &s);
     void onReadyRead();
+    void onTabChanged(int index);
 
 private slots:
     void on_action_save_as_triggered();
