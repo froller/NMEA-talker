@@ -89,25 +89,18 @@ void MainWindow::on_action_quit_triggered()
 
 void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
 {
+    QLayout *tabLayout = new QVBoxLayout();
+    tabLayout->addWidget(plugin);
     QWidget *tabWidget = new QWidget(ui->constructorTabWidget);
-    QVBoxLayout *vBoxLayout = new QVBoxLayout(tabWidget);
-
-    plugin->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    vBoxLayout->addWidget(plugin);
-
-    //char buttonName[16];
-    //snprintf(buttonName, 16, "sendButton%02u", ui->constructorTabWidget->children().length());
+    //tabWidget->setObjectName(tabName);
+    tabWidget->setLayout(tabLayout);
+    ui->constructorTabWidget->addTab(tabWidget, tabName);
 
     QPushButton *sendButton = new QPushButton("Transmit");
-    //sendButton->setObjectName(buttonName);
     sendButton->setObjectName("transmitButton");
-    //QObject::connect(sendButton, SIGNAL(clicked()), plugin, SLOT(onRequestMessage()));
     QObject::connect(&timer, SIGNAL(timeout()), plugin, SLOT(onTick()));
     QObject::connect(plugin, SIGNAL(message(QString)), this, SLOT(onMessage(QString)));
 
-    //vBoxLayout->addWidget(sendButton);
-
-    ui->constructorTabWidget->addTab(tabWidget, tabName);
 }
 
 void MainWindow::onMessage(const QString &s)
@@ -121,7 +114,6 @@ void MainWindow::onMessage(const QString &s)
         ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     else
         ui->logTextEdit->setTextCursor(c);
-    //ui->logTextEdit->ensureCursorVisible();
 }
 
 void MainWindow::onReadyRead()
@@ -134,12 +126,19 @@ void MainWindow::onReadyRead()
         ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     else
         ui->logTextEdit->setTextCursor(c);
-    //ui->logTextEdit->ensureCursorVisible();
 }
 
 void MainWindow::onTabChanged(int index)
 {
     qDebug() << "Tab" << index << "selected";
+    for (int i = 0; i < ui->constructorTabWidget->count(); ++i)
+    {
+        QObject *o = ui->constructorTabWidget->widget(i)->children()[1];
+        if (i == index)
+            QObject::connect(ui->transmitButton, SIGNAL(clicked()), o, SLOT(onRequestMessage()));
+        else
+            QObject::disconnect(ui->transmitButton, SIGNAL(clicked()), o, SLOT(onRequestMessage()));
+    }
 }
 
 void MainWindow::on_action_preferences_triggered()
