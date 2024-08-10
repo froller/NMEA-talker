@@ -188,9 +188,9 @@ void MainWindow::setPreferencesDialogValues(const QSettings &s)
 
     dialogUi->deviceComboBox->setCurrentText(s.value("connectivity/device").toString());
     dialogUi->baudrateComboBox->setCurrentText(s.value("connectivity/baudrate").toString());
-    dialogUi->databitsComboBox->setCurrentIndex(8 - s.value("connectivity/databits").toUInt());
+    dialogUi->databitsComboBox->setCurrentIndex(8 - (s.value("connectivity/databits").toUInt() ? s.value("connectivity/databits").toUInt() : 8));
     dialogUi->parityComboBox->setCurrentIndex(s.value("connectivity/parity").toUInt());
-    dialogUi->stopbitsComboBox->setCurrentIndex(s.value("connectivity/stopbits").toUInt() - 1);
+    dialogUi->stopbitsComboBox->setCurrentIndex((s.value("connectivity/stopbits").toUInt() ? s.value("connectivity/stopbits").toUInt() : 1) - 1);
     dialogUi->flowControlComboBox->setCurrentIndex(s.value("connectivity/flowcontrol").toUInt());
 }
 
