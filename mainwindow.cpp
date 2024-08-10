@@ -45,8 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    if (tty)
-        disconnectDevice();
+    disconnectDevice();
     delete ui;
 }
 
@@ -92,7 +91,6 @@ void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
     QLayout *tabLayout = new QVBoxLayout();
     tabLayout->addWidget(plugin);
     QWidget *tabWidget = new QWidget(ui->constructorTabWidget);
-    //tabWidget->setObjectName(tabName);
     tabWidget->setLayout(tabLayout);
     ui->constructorTabWidget->addTab(tabWidget, tabName);
 
@@ -105,8 +103,24 @@ void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
 
 void MainWindow::onMessage(const QString &s)
 {
-    if (tty)
-        tty->write(s.toStdString().c_str());
+    if (!tty.isOpen())
+    {
+        qWarning() << "Sending through closed port";
+        return;
+    }
+    if (tty.write(s.toStdString().c_str()) < 0)
+    {
+        qCritical() << "Error sending message to" << tty.portName() << ":" << tty.errorString();
+        QMessageBox errorMsg(
+            QMessageBox::Icon::Critical,
+            "Error",
+            "Error sending message to " + tty.portName() + ": " + tty.errorString(),
+            QMessageBox::StandardButton::Close,
+            this
+        );
+        errorMsg.exec();
+        return;
+    }
     const QTextCursor &c = ui->logTextEdit->textCursor();
     ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     ui->logTextEdit->insertPlainText(s + "\n");
@@ -118,7 +132,7 @@ void MainWindow::onMessage(const QString &s)
 
 void MainWindow::onReadyRead()
 {
-    const QByteArray &data = tty->readAll();
+    const QByteArray &data = tty.readAll();
     const QTextCursor &c = ui->logTextEdit->textCursor();
     ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     ui->logTextEdit->insertPlainText(data.constData());
@@ -182,16 +196,16 @@ void MainWindow::setPreferencesDialogValues(const QSettings &s)
 
 void MainWindow::on_connectButton_clicked()
 {
-    if (tty)
+    if (tty.isOpen())
     {
-        ui->statusbar->showMessage(QString("Disconnected from ") + tty->portName(), 5000);
+        ui->statusbar->showMessage(QString("Disconnected from ") + tty.portName(), 5000);
         disconnectDevice();
         ui->connectButton->setText("Connect");
     }
     else if (connectDevice())
     {
         ui->connectButton->setText("Disconnect");
-        ui->statusbar->showMessage(QString("Connected to ") + tty->portName(), 0);
+        ui->statusbar->showMessage(QString("Connected to ") + tty.portName(), 0);
     }
     else
     {
@@ -204,49 +218,48 @@ bool MainWindow::connectDevice()
 {
     QSettings settings(settingsFileName, QSettings::IniFormat);
 
-    tty = new QSerialPort(settings.value("connectivity/device").toString());
-    if (!tty)
-    {
-        qCritical() << "Failed to open" << settings.value("connectivity/device").toString().toUtf8();
-        return false;
-    }
-
-    tty->setBaudRate(settings.value("connectivity/baudrate").toUInt(), QSerialPort::AllDirections);
-    tty->setDataBits(QSerialPort::DataBits(settings.value("connectivity/databits").toUInt()));
+    tty.setPortName(settings.value("connectivity/device").toString());
+    tty.setBaudRate(settings.value("connectivity/baudrate").toUInt(), QSerialPort::AllDirections);
+    tty.setDataBits(QSerialPort::DataBits(settings.value("connectivity/databits").toUInt()));
     switch (settings.value("connectivity/parity").toUInt())
     {
     case 1:
-        tty->setParity(QSerialPort::Parity::OddParity);
+        tty.setParity(QSerialPort::Parity::OddParity);
         break;
     case 2:
-        tty->setParity(QSerialPort::Parity::EvenParity);
+        tty.setParity(QSerialPort::Parity::EvenParity);
         break;
     case 0:
     default:
-        tty->setParity(QSerialPort::Parity::NoParity);
+        tty.setParity(QSerialPort::Parity::NoParity);
     }
-    tty->setStopBits(QSerialPort::StopBits(settings.value("connectivity/stopbits").toUInt()));
-    tty->setFlowControl(QSerialPort::FlowControl(settings.value("connectivity/flowcontrol").toUInt()));
-    if (!tty->open(QSerialPort::ReadWrite))
+    tty.setStopBits(QSerialPort::StopBits(settings.value("connectivity/stopbits").toUInt()));
+    tty.setFlowControl(QSerialPort::FlowControl(settings.value("connectivity/flowcontrol").toUInt()));
+    if (!tty.open(QSerialPort::ReadWrite))
     {
-        qCritical() << "Failed to open" << settings.value("connectivity/device").toString().toUtf8() << ":" << tty->error();
-        delete tty;
-        tty = nullptr;
+        qCritical() << "Failed to open" << tty.portName() << ":" << tty.errorString();
+        QMessageBox errorMsg(
+            QMessageBox::Icon::Critical,
+            "Error",
+            "Error opening " + tty.portName() + ": " + tty.errorString(),
+            QMessageBox::StandardButton::Close,
+            this
+        );
+        errorMsg.exec();
         return false;
     }
 
-    QObject::connect(tty, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    qInfo() << "Connected to" << tty->portName();
+    QObject::connect(&tty, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
+    ui->transmitButton->setEnabled(true);
+    qInfo() << "Connected to" << tty.portName();
     return true;
 }
 
 void MainWindow::disconnectDevice()
 {
-    qInfo() << "Disconnected from" << tty->portName();
-    if (tty->isOpen())
-        tty->close();
-    QObject::disconnect(tty, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    delete tty;
-    tty = nullptr;
+    qInfo() << "Disconnected from" << tty.portName();
+    tty.close();
+    QObject::disconnect(&tty, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
+    ui->transmitButton->setEnabled(false);
 }
 

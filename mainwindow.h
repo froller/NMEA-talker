@@ -46,7 +46,7 @@ private:
     QTimer timer;
     PreferencesDialog preferencesDialog;
     QString settingsFileName;
-    QSerialPort *tty;
+    QSerialPort tty;
 
 private:
     void setPreferencesDialogValues(const QSettings &settings);
