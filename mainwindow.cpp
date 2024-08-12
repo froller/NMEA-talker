@@ -108,7 +108,9 @@ void MainWindow::onMessage(const QString &s)
         qWarning() << "Sending through closed port";
         return;
     }
-    if (tty.write(s.toStdString().c_str()) < 0)
+    QString msg(s);
+    msg += "\r\n";
+    if (tty.write(msg.toStdString().c_str()) < 0)
     {
         qCritical() << "Error sending message to" << tty.portName() << ":" << tty.errorString();
         QMessageBox errorMsg(
@@ -123,7 +125,7 @@ void MainWindow::onMessage(const QString &s)
     }
     const QTextCursor &c = ui->logTextEdit->textCursor();
     ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
-    ui->logTextEdit->insertPlainText(s + "\n");
+    ui->logTextEdit->insertPlainText(msg);
     if (c.selection().isEmpty())
         ui->logTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     else
