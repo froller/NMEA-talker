@@ -56,9 +56,9 @@ void MainWindow::on_log_item_push(const QString &s)
 
 void MainWindow::on_action_save_as_triggered()
 {
-    QFileDialog saveLogAsDialog(this, "Save log as...");
+    QFileDialog saveLogAsDialog(this, tr("Save log as..."));
     saveLogAsDialog.setAcceptMode(QFileDialog::AcceptSave);
-    saveLogAsDialog.setNameFilters(QStringList() << "Log files (*.log)" << "Text files (*.txt)" << "All files (*.*)");
+    saveLogAsDialog.setNameFilters(QStringList() << tr("Log files (*.log)") << tr("Text files (*.txt)") << tr("All files (*.*)"));
     if (saveLogAsDialog.exec())
     {
         QSaveFile logFile(saveLogAsDialog.selectedFiles().at(0));
@@ -94,7 +94,7 @@ void MainWindow::addPlugin(PluginBase *plugin, const QString &tabName)
     tabWidget->setLayout(tabLayout);
     ui->constructorTabWidget->addTab(tabWidget, tabName);
 
-    QPushButton *sendButton = new QPushButton("Transmit");
+    QPushButton *sendButton = new QPushButton(tr("Transmit"));
     sendButton->setObjectName("transmitButton");
     QObject::connect(&timer, SIGNAL(timeout()), plugin, SLOT(onTick()));
     QObject::connect(plugin, SIGNAL(message(QString)), this, SLOT(onMessage(QString)));
@@ -115,8 +115,8 @@ void MainWindow::onMessage(const QString &s)
         qCritical() << "Error sending message to" << tty.portName() << ":" << tty.errorString();
         QMessageBox errorMsg(
             QMessageBox::Icon::Critical,
-            "Error",
-            "Error sending message to " + tty.portName() + ": " + tty.errorString(),
+            tr("Error"),
+            tr("Error sending message to ") + tty.portName() + ": " + tty.errorString(),
             QMessageBox::StandardButton::Close,
             this
         );
@@ -200,19 +200,19 @@ void MainWindow::on_connectButton_clicked()
 {
     if (tty.isOpen())
     {
-        ui->statusbar->showMessage(QString("Disconnected from ") + tty.portName(), 5000);
+        ui->statusbar->showMessage(QString(tr("Disconnected from ")) + tty.portName(), 5000);
         disconnectDevice();
-        ui->connectButton->setText("Connect");
+        ui->connectButton->setText(tr("Connect"));
     }
     else if (connectDevice())
     {
-        ui->connectButton->setText("Disconnect");
-        ui->statusbar->showMessage(QString("Connected to ") + tty.portName(), 0);
+        ui->connectButton->setText(tr("Disconnect"));
+        ui->statusbar->showMessage(QString(tr("Connected to ")) + tty.portName(), 0);
     }
     else
     {
-        ui->connectButton->setText("Connect");
-        ui->statusbar->showMessage("Connection failed", 5000);
+        ui->connectButton->setText(tr("Connect"));
+        ui->statusbar->showMessage(tr("Connection failed"), 5000);
     }
 }
 
@@ -242,8 +242,8 @@ bool MainWindow::connectDevice()
         qCritical() << "Failed to open" << tty.portName() << ":" << tty.errorString();
         QMessageBox errorMsg(
             QMessageBox::Icon::Critical,
-            "Error",
-            "Error opening " + tty.portName() + ": " + tty.errorString(),
+            tr("Error"),
+            tr("Error opening ") + tty.portName() + ": " + tty.errorString(),
             QMessageBox::StandardButton::Close,
             this
         );

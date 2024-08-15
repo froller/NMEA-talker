@@ -78,7 +78,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-qt_add_lupdate(TS_FILES ${TS_FILES} SOURCE_TARGETS NMEA-talker)
+qt_add_lupdate(TS_FILES ${TS_FILES} SOURCE_TARGETS ${PROJECT_NAME})
 
 include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME}
