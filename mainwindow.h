@@ -5,7 +5,7 @@
 #include <QTabWidget>
 #include <QPlainTextEdit>
 #include <QTimer>
-#include <QSettings>
+#include <QSerialPort>
 
 #include "plugin-base.h"
 #include "preferencesdialog.h"
@@ -13,6 +13,7 @@
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
+class PreferencesDialog;
 }
 QT_END_NAMESPACE
 
@@ -31,17 +32,26 @@ public:
 
 public slots:
     void onMessage(const QString &s);
+    void onReadyRead();
+    void onTabChanged(int index);
 
 private slots:
     void on_action_save_as_triggered();
     void on_action_quit_triggered();
-
     void on_action_preferences_triggered();
+    void on_connectButton_clicked();
 
 private:
     Ui::MainWindow *ui;
-    QSettings settings;
     QTimer timer;
     PreferencesDialog preferencesDialog;
+    QString settingsFileName;
+    QSerialPort tty;
+
+private:
+    void setPreferencesDialogValues(const QSettings &settings);
+    bool connectDevice();
+    void disconnectDevice();
+
 };
 #endif // MAINWINDOW_H

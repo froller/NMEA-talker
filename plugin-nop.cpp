@@ -16,7 +16,7 @@ PluginNop::~PluginNop()
 void PluginNop::onRequestMessage()
 {
     PluginBase::onRequestMessage();
-    char sentence[16] = "$PIZMNOP";
+    char sentence[16] = "$PIMNOOP";
     snprintf(&sentence[8], 7, "*%02X", NMEAChecksum(sentence));
     emit message(sentence);
 }

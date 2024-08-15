@@ -1,7 +1,7 @@
 #include "preferencesdialog.h"
 #include "ui_preferencesdialog.h"
 
-PreferencesDialog::PreferencesDialog(QSettings &s, QWidget *parent)
+PreferencesDialog::PreferencesDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::PreferencesDialog)
 {
@@ -13,13 +13,7 @@ PreferencesDialog::~PreferencesDialog()
     delete ui;
 }
 
-void PreferencesDialog::on_buttonBox_accepted()
+Ui::PreferencesDialog *PreferencesDialog::getUi()
 {
-    settings.setValue("device", ui->deviceComboBox->currentText());
-    settings.setValue("baudrate", ui->baudrateComboBox->currentText());
-    settings.setValue("databits", 8 - ui->databitsComboBox->currentIndex());
-    settings.setValue("parity", ui->parityComboBox->currentIndex());
-    settings.setValue("stopbits", 1 + ui->stopbitsComboBox->currentIndex());
-    settings.sync();
+    return ui;
 }
-

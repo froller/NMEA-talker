@@ -19,7 +19,14 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QComboBox" name="deviceComboBox"/>
+      <widget class="QComboBox" name="deviceComboBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_5">
@@ -30,6 +37,12 @@
      </item>
      <item row="1" column="1">
       <widget class="QComboBox" name="baudrateComboBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="currentText">
         <string>9600</string>
        </property>
@@ -101,6 +114,12 @@
      </item>
      <item row="2" column="1">
       <widget class="QComboBox" name="databitsComboBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="currentIndex">
         <number>0</number>
        </property>
@@ -118,6 +137,12 @@
      </item>
      <item row="3" column="1">
       <widget class="QComboBox" name="parityComboBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <item>
         <property name="text">
          <string>None</string>
@@ -137,6 +162,12 @@
      </item>
      <item row="4" column="1">
       <widget class="QComboBox" name="stopbitsComboBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <item>
         <property name="text">
          <string>1 bit</string>
@@ -157,7 +188,13 @@
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="flowControlComboBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <item>
         <property name="text">
          <string>None</string>

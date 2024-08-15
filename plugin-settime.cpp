@@ -17,14 +17,14 @@ void PluginSetTime::onRequestMessage()
 {
     PluginBase::onRequestMessage();
     const size_t buffer_len = 48;
-    char sentence[buffer_len] = { 0 }; // $PIZMST,HHMMSS.SS,dd,mm,yyyy,ZZ,zz[*CC]
-    size_t len = snprintf(sentence, buffer_len, "$PIZMST,%02u%02u%02u,%02u,%02u,%04u,,",
-                                                         ui->dateTimeEdit->time().hour(),
-                                                             ui->dateTimeEdit->time().minute(),
-                                                                 ui->dateTimeEdit->time().second(),
-                                                                      ui->dateTimeEdit->date().day(),
-                                                                           ui->dateTimeEdit->date().month(),
-                                                                                ui->dateTimeEdit->date().year()
+    char sentence[buffer_len] = { 0 }; // $PIMST,HHMMSS.SS,dd,mm,yyyy,ZZ,zz[*CC]
+    size_t len = snprintf(sentence, buffer_len, "$PIMST,%02u%02u%02u,%02u,%02u,%04u,,",
+                                                        ui->dateTimeEdit->time().hour(),
+                                                            ui->dateTimeEdit->time().minute(),
+                                                                ui->dateTimeEdit->time().second(),
+                                                                     ui->dateTimeEdit->date().day(),
+                                                                          ui->dateTimeEdit->date().month(),
+                                                                               ui->dateTimeEdit->date().year()
                           );
     snprintf(sentence + len, buffer_len - len - 1, "*%02X", NMEAChecksum(sentence));
     emit message(sentence);
